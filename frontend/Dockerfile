@@ -12,6 +12,7 @@ COPY package.json pnpm-lock.yaml vite.config.js ./
 RUN pnpm install --frozen-lockfile
 
 COPY src src
+COPY index.html ./
 
 RUN pnpm build
 

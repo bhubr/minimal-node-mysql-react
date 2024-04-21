@@ -1,0 +1,45 @@
+# "Staging" docker-compose file
+version: "3.7"
+
+services:
+  # db (mysql)
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: always
+    environment:
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=myapp
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - ./docker/mysql-data:/var/lib/mysql
+
+  # backend (nodejs app)
+  backend:
+    image: benoithubert/minimal-node-mysql-app:0.2.0
+    container_name: backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_NAME=mydb
+      - DB_USER=myapp
+      - DB_PASS=myapp
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # frontend (react build served by nginx with proxy pass to backend)
+  frontend:
+    image: benoithubert/minimal-react-app:0.2.0
+    container_name: frontend
+    ports:
+      - "8085:80"
+    depends_on:
+      - backend
