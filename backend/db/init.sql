@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER myuser@localhost IDENTIFIED BY 'MyPassword';
+GRANT ALL PRIVILEGES ON mydb.* TO myuser@localhost;
+FLUSH PRIVILEGES;
